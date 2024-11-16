@@ -16,12 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from relationship_app import views
+from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('relationship_app.urls')),  
+    path('', lambda request: redirect('login/')),  # Redirect the root URL to the login page
+    path('', include('relationship_app.urls')),  # Include app-specific URLs
 ]
-
-
-
