@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Library Detail</title>
+</head>
+<body>
+    <h1>Library: {{ library.name }}</h1>  <!-- عرض اسم المكتبة -->
+    <h2>Books in Library:</h2>
+    <ul>
+        {% for book in library.books.all %}  <!-- حلقة لعرض جميع الكتب في المكتبة -->
+        <li>{{ book.title }} by {{ book.author.name }} (Published {{ book.publication_year }})</li>  <!-- عرض تفاصيل الكتاب -->
+        {% endfor %}
+    </ul>
+</body>
+</html>
