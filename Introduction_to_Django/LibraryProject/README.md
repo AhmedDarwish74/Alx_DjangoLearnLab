@@ -1,1 +1,0 @@
-Install new project  django  
