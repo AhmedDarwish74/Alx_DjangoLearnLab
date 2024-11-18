@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 
+
 # Function-based View to list all books
 def list_books(request):
     books = Book.objects.all()  
@@ -75,3 +76,17 @@ def member_view(request):
     return HttpResponse("Welcome Member!")
 
 
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+
+
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
