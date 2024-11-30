@@ -9,3 +9,9 @@
 - **Editors**: تحتوي على الأذونات `can_create`, `can_edit`.
 - **Viewers**: تحتوي على الأذن `can_view`.
 - **Admins**: تحتوي على جميع الأذونات.
+## التدابير الأمنية في تطبيق Django
+
+- **حماية CSRF:** يتم تضمين `{% csrf_token %}` في جميع النماذج لمنع هجمات CSRF.
+- **حماية XSS:** تم تمكين `SECURE_BROWSER_XSS_FILTER` واستخدام رؤوس CSP.
+- **منع SQL Injection:** يتم التعامل مع جميع الاستعلامات باستخدام ORM لتجنب SQL Injection.
+- **HTTPS:** تم تأمين الكوكيز باستخدام `CSRF_COOKIE_SECURE` و `SESSION_COOKIE_SECURE`.

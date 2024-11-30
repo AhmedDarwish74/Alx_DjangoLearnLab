@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import permission_required
 from .models import Book
 
 
+
 @permission_required('bookshelf.can_view', raise_exception=True)
 def view_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
@@ -34,3 +35,7 @@ def delete_book(request, book_id):
         return redirect('book_list')
     return render(request, 'delete_book.html', {'book': book})
 
+def book_search(request):
+    search_term = request.GET.get('search', '')
+    books = Book.objects.filter(title__icontains=search_term)
+    return render(request, 'bookshelf/book_list.html', {'books': books})
