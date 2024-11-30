@@ -1,7 +1,19 @@
-<!-- LibraryProject/bookshelf/templates/bookshelf/form_example.html -->
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Form</title>
+</head>
+<body>
+    <h1>Fill in the Book Details</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- عرض النموذج بشكل مرتب باستخدام as_p -->
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
