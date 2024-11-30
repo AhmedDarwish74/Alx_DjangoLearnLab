@@ -140,3 +140,23 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True    
+
+
+# Step 1: Enable SSL Redirect
+SECURE_SSL_REDIRECT = True  
+# Step 2: Enable HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True 
+SECURE_HSTS_PRELOAD = True 
+# Step 3: Secure cookies over HTTPS
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+# Step 4: Configure secure headers
+X_FRAME_OPTIONS = 'DENY' 
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True 
+
+# LibraryProject/settings.py
+
+# تم تمكين هذه الإعدادات لضمان الاتصال الآمن عبر HTTPS فقط.
+# ملاحظة: تأكد من تفعيل HTTPS في بيئة الإنتاج وتحديث إعدادات الخادم (مثل Nginx أو Apache) لدعم الشهادات SSL.

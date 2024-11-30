@@ -15,3 +15,7 @@
 - **حماية XSS:** تم تمكين `SECURE_BROWSER_XSS_FILTER` واستخدام رؤوس CSP.
 - **منع SQL Injection:** يتم التعامل مع جميع الاستعلامات باستخدام ORM لتجنب SQL Injection.
 - **HTTPS:** تم تأمين الكوكيز باستخدام `CSRF_COOKIE_SECURE` و `SESSION_COOKIE_SECURE`.
+# LibraryProject/settings.py
+
+# تم تمكين هذه الإعدادات لضمان الاتصال الآمن عبر HTTPS فقط.
+# ملاحظة: تأكد من تفعيل HTTPS في بيئة الإنتاج وتحديث إعدادات الخادم (مثل Nginx أو Apache) لدعم الشهادات SSL.
