@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل بيانات الكتاب</title>
+</head>
+<body>
+    <h1>تعديل بيانات الكتاب</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">حفظ التعديلات</button>
+    </form>
+    <a href="{% url 'list_books' %}">عرض جميع الكتب</a>
+</body>
+</html>
