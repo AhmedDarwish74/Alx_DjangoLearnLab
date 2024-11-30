@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from .models import Book
+from .forms import ExampleForm
 
 
 
@@ -26,7 +27,7 @@ def edit_book(request, book_id):
         pass
     return render(request, 'edit_book.html', {'book': book})
 
-# حذف كتاب
+
 @permission_required('bookshelf.can_delete', raise_exception=True)
 def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
@@ -39,3 +40,15 @@ def book_search(request):
     search_term = request.GET.get('search', '')
     books = Book.objects.filter(title__icontains=search_term)
     return render(request, 'bookshelf/book_list.html', {'books': books})
+def example_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+          
+            title = form.cleaned_data['title']
+            author = form.cleaned_data['author']
+            publication_year = form.cleaned_data['publication_year']
+            
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
