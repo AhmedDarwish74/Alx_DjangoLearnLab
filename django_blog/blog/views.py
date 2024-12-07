@@ -4,6 +4,7 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 
 
+
 # عرض تسجيل الدخول
 def user_login(request):
     if request.method == 'POST':
