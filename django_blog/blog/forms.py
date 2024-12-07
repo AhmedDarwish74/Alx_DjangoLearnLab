@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django_blog.blog.models import Post
 from .models import Post
+from taggit.forms import TagWidget
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -28,11 +29,7 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags']
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        if commit:
-            instance.save()
-            self.save_m2m()
-        return instance
+        fields = ['title', 'content', 'tags']  # أضف حقول النموذج المطلوبة
+        widgets = {
+            'tags': TagWidget(),  # تأكد من تضمين TagWidget في الwidgets
+        }
