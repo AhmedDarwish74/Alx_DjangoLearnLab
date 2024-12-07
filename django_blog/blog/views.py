@@ -14,6 +14,7 @@ from .forms import CommentForm
 from django.db.models import Q
 from django.views.generic import ListView
 from .models import Post, Tag
+from taggit.forms import TagWidget
 
 
 
@@ -192,3 +193,10 @@ class PostByTagListView(ListView):
         context = super().get_context_data(**kwargs)
         context['tag_name'] = self.kwargs.get('tag_name')
         return context
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']  # تأكد من تضمين الحقل الخاص بالتصنيفات
+        widgets = {
+            'tags': TagWidget(),
+        }
