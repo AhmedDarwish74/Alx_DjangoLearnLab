@@ -124,8 +124,10 @@ USE_TZ = True
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#  STATIC
 STATIC_URL = '/static/'
 
+# static
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'blog/static'),
 ]
