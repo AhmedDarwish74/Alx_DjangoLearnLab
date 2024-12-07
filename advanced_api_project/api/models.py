@@ -2,9 +2,8 @@ from django.db import models
 
 class Author(models.Model):
     """
-    Represents an author of books.
-    Fields:
-    - name: The name of the author.
+    Model representing an author.
+    - `name`: Represents the name of the author.
     """
     name = models.CharField(max_length=255)
 
@@ -13,11 +12,10 @@ class Author(models.Model):
 
 class Book(models.Model):
     """
-    Represents a book.
-    Fields:
-    - title: The title of the book.
-    - publication_year: The year the book was published.
-    - author: A ForeignKey linking the book to an author.
+    Model representing a book.
+    - `title`: Represents the title of the book.
+    - `publication_year`: The year the book was published.
+    - `author`: ForeignKey to link each book to its author (establishing one-to-many relationship).
     """
     title = models.CharField(max_length=255)
     publication_year = models.IntegerField()
