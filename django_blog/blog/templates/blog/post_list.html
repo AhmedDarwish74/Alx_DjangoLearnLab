@@ -1,0 +1,9 @@
+{% for post in posts %}
+    <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+    <p>{{ post.content|truncatewords:20 }}</p>
+    <p>Author: {{ post.author.username }}</p>
+    {% if user.is_authenticated and user == post.author %}
+        <a href="{% url 'post_edit' post.pk %}">Edit</a> |
+        <a href="{% url 'post_delete' post.pk %}">Delete</a>
+    {% endif %}
+{% endfor %}
