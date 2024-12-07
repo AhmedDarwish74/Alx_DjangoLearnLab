@@ -59,15 +59,13 @@ class PostListView(ListView):
     template_name = 'blog/post_list.html'
     context_object_name = 'posts'
 
-
-# عرض تفاصيل منشور معين
+# عرض تفاصيل المنشور
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
 
-
-# إنشاء منشور جديد (فقط للمُصادقين)
+# إنشاء منشور جديد
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
@@ -80,8 +78,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('post_list')
 
-
-# تعديل منشور (فقط مؤلف المنشور)
+# تعديل المنشور
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     form_class = PostForm
@@ -93,8 +90,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('post_list')
 
-
-# حذف منشور (فقط مؤلف المنشور)
+# حذف المنشور
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
