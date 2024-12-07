@@ -11,6 +11,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import View, CreateView, UpdateView, DeleteView, ListView
 from .models import Comment, Post
 from .forms import CommentForm
+from django.db.models import Q
+from django.views.generic import ListView
+from .models import Post, Tag
+
 
 
 # عرض تسجيل الدخول
@@ -149,3 +153,42 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['post_id']})
+
+class SearchResultsView(ListView):
+    model = Post
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)
+            ).distinct()
+        return Post.objects.none()
+    
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name=tag_name).distinct()
+    
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name=tag_name).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag_name'] = self.kwargs.get('tag_name')
+        return context

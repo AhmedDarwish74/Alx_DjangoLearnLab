@@ -23,3 +23,12 @@
   {{ form.as_p }}
   <button type="submit">Comment</button>
 </form>
+<h1>{{ object.title }}</h1>
+<p>{{ object.content }}</p>
+
+<div>
+    <h4>Tags:</h4>
+    {% for tag in object.tags.all %}
+        <a href="{% url 'post_list' %}?tag={{ tag.name }}">{{ tag.name }}</a>
+    {% endfor %}
+</div>
