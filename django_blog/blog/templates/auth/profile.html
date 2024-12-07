@@ -1,17 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Profile</title>
-    <link rel="stylesheet" href="{% static 'blog/css/styles.css' %}">
-
+    <title>الملف الشخصي</title>
 </head>
 <body>
-    <h2>Welcome{{ user.username }}</h2>
+    <h2>مرحبًا، {{ user.username }}</h2>
+    <p>البريد الإلكتروني: {{ user.email }}</p>
     <form method="post">
         {% csrf_token %}
-        <label for="email">Email:</label>
-        <input type="email" name="email" value="{{ user.email }}">
-        <input type="submit" value="Updating data:">
+        <label for="email">تغيير البريد الإلكتروني:</label>
+        <input type="email" name="email" required>
+        <input type="submit" value="تحديث">
     </form>
+    <a href="{% url 'logout' %}">تسجيل الخروج</a>
 </body>
 </html>

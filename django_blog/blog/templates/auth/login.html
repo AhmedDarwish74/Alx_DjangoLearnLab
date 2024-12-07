@@ -1,16 +1,21 @@
 
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title> Log in</title>
+    <title>تسجيل الدخول</title>
     <link rel="stylesheet" href="{% static 'blog/css/styles.css' %}">
 </head>
 <body>
-    <h2>Log in</h2>
+    <h2>تسجيل الدخول</h2>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Log in">
+        <input type="text" name="username" placeholder="اسم المستخدم" required>
+        <input type="password" name="password" placeholder="كلمة المرور" required>
+        <input type="submit" value="تسجيل الدخول">
     </form>
 </body>
 </html>
