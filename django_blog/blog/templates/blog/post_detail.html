@@ -7,3 +7,19 @@
   <p>الكاتب: {{ post.author }}</p>
   <a href="{% url 'post_list' %}" class="btn btn-secondary">العودة للقائمة</a>
 {% endblock %}
+{% for comment in comments %}
+<div>
+  <p>{{ comment.author.username }} - {{ comment.created_at }}</p>
+  <p>{{ comment.content }}</p>
+  {% if comment.author == user %}
+  <a href="{% url 'comment_edit' pk=comment.id %}">Edit</a>
+  <a href="{% url 'comment_delete' pk=comment.id %}">Delete</a>
+  {% endif %}
+</div>
+{% endfor %}
+
+<form method="POST" action="{% url 'comment_create' post_id=post.id %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Comment</button>
+</form>

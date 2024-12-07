@@ -6,8 +6,11 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Post
-from .forms import PostForm
-
+from django_blog.blog.forms import PostForm
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import View, CreateView, UpdateView, DeleteView, ListView
+from .models import Comment, Post
+from .forms import CommentForm
 
 
 # عرض تسجيل الدخول
@@ -53,23 +56,20 @@ def user_profile(request):
         return redirect('profile')
     return render(request, 'auth/profile.html', {'user': request.user})
 
-# عرض قائمة المنشورات
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
-    context_object_name = 'posts'
 
-# عرض تفاصيل المنشور
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
-    context_object_name = 'post'
 
-# إنشاء منشور جديد
+
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    form_class = PostForm
     template_name = 'blog/post_form.html'
+    fields = ['title', 'content']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -78,23 +78,74 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('post_list')
 
-# تعديل المنشور
+
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    form_class = PostForm
     template_name = 'blog/post_form.html'
+    fields = ['title', 'content']
 
     def test_func(self):
-        return self.request.user == self.get_object().author
+        post = self.get_object()
+        return post.author == self.request.user
 
     def get_success_url(self):
         return reverse_lazy('post_list')
 
-# حذف المنشور
+
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
     success_url = reverse_lazy('post_list')
 
     def test_func(self):
-        return self.request.user == self.get_object().author
+        post = self.get_object()
+        return post.author == self.request.user
+    
+class CommentListView(View):
+    """View لعرض التعليقات الخاصة بمقالة معينة"""
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        comments = post.comments.all()
+        return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments})
+
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    """إنشاء تعليق جديد على المقالة"""
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = get_object_or_404(Post, id=self.kwargs['post_id'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['post_id']})
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """تعديل تعليق موجود"""
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['post_id']})
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """حذف تعليق"""
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['post_id']})
