@@ -1,0 +1,12 @@
+<!-- blog/templates/blog/post_confirm_delete.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>تأكيد الحذف</h1>
+  <p>هل أنت متأكد أنك تريد حذف المنشور: "{{ object.title }}"؟</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">تأكيد الحذف</button>
+    <a href="{% url 'post_list' %}" class="btn btn-secondary">إلغاء</a>
+  </form>
+{% endblock %}
