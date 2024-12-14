@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import update_last_login
+from .models import CustomUser
 
 User = get_user_model()
 
@@ -41,3 +42,8 @@ class UserLoginSerializer(serializers.Serializer):
             }
 
         raise serializers.ValidationError("Invalid credentials")
+    
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'following', 'followers']

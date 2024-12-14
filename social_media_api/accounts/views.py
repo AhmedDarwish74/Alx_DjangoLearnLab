@@ -6,6 +6,8 @@ from .serializers import UserRegistrationSerializer, UserLoginSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
+from .models import CustomUser
 
 class UserRegistrationView(APIView):
     def post(self, request):
@@ -57,3 +59,23 @@ class UserProfileView(APIView):
             'bio': user.bio,
             'profile_picture': user.profile_picture.url if user.profile_picture else None
         })
+
+class FollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        target_user = get_object_or_404(CustomUser, id=user_id)
+        if request.user.is_following(target_user):
+            return Response({"detail": "Already following this user."}, status=400)
+        request.user.follow(target_user)
+        return Response({"detail": f"You are now following {target_user.username}."})
+
+class UnfollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        target_user = get_object_or_404(CustomUser, id=user_id)
+        if not request.user.is_following(target_user):
+            return Response({"detail": "You are not following this user."}, status=400)
+        request.user.unfollow(target_user)
+        return Response({"detail": f"You have unfollowed {target_user.username}."})
