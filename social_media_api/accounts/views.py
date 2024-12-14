@@ -103,8 +103,8 @@ class FollowUserView(generics.GenericAPIView):
     """
     View for following a user.
     """
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
-    queryset = CustomUser.objects.all()  # Define queryset
+    permission_classes = [IsAuthenticated]  # Ensures the user is authenticated
+    queryset = CustomUser.objects.all()
 
     def post(self, request, user_id):
         target_user = get_object_or_404(CustomUser, id=user_id)
@@ -120,8 +120,8 @@ class UnfollowUserView(generics.GenericAPIView):
     """
     View for unfollowing a user.
     """
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated
-    queryset = CustomUser.objects.all()  # Define queryset
+    permission_classes = [IsAuthenticated]  # Ensures the user is authenticated
+    queryset = CustomUser.objects.all()
 
     def post(self, request, user_id):
         target_user = get_object_or_404(CustomUser, id=user_id)
