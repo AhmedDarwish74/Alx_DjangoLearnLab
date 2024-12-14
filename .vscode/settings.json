@@ -3,6 +3,7 @@
         "authtoken",
         "Unfollow",
         "unfollowed",
+        "unfollowing",
         "USESHOWWINDOW",
         "viewsets"
     ]

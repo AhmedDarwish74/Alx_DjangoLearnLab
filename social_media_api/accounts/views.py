@@ -8,6 +8,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from .models import CustomUser
+from rest_framework import generics, status
+
 
 class UserRegistrationView(APIView):
     def post(self, request):
@@ -79,3 +81,34 @@ class UnfollowUserView(APIView):
             return Response({"detail": "You are not following this user."}, status=400)
         request.user.unfollow(target_user)
         return Response({"detail": f"You have unfollowed {target_user.username}."})
+    
+class FollowUserView(generics.GenericAPIView):
+    """
+    View for following a user.
+    """
+    permission_classes = [IsAuthenticated]
+    queryset = CustomUser.objects.all()
+
+    def post(self, request, user_id):
+        target_user = get_object_or_404(CustomUser, id=user_id)
+        if request.user == target_user:
+            return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+        if target_user in request.user.following.all():
+            return Response({"detail": "Already following this user."}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.following.add(target_user)
+        return Response({"detail": f"You are now following {target_user.username}."}, status=status.HTTP_200_OK)
+
+
+class UnfollowUserView(generics.GenericAPIView):
+    """
+    View for unfollowing a user.
+    """
+    permission_classes = [IsAuthenticated]
+    queryset = CustomUser.objects.all()
+
+    def post(self, request, user_id):
+        target_user = get_object_or_404(CustomUser, id=user_id)
+        if target_user not in request.user.following.all():
+            return Response({"detail": "You are not following this user."}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.following.remove(target_user)
+        return Response({"detail": f"You have unfollowed {target_user.username}."}, status=status.HTTP_200_OK)
