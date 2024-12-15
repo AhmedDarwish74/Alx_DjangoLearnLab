@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Post, Comment
 from django.contrib.auth import get_user_model
+from .models import Like, Post
 
 # Get the custom user model
 User = get_user_model()
@@ -31,3 +32,9 @@ class CommentSerializer(serializers.ModelSerializer):
         if not value:
             raise serializers.ValidationError("Comment content cannot be empty.")
         return value
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'post', 'created_at']
+        read_only_fields = ['user', 'created_at']
