@@ -8,8 +8,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from rest_framework.generics import get_object_or_404
 from .models import Post, Like
+from rest_framework import status
 from notifications.models import Notification
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -92,3 +95,50 @@ class UnlikePostView(APIView):
         
         like.delete()
         return Response({"detail": "Post unliked successfully."}, status=200)
+    
+class LikePostView(APIView):
+    """
+    View for liking a post.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        # Use generics.get_object_or_404 to fetch the post
+        post = get_object_or_404(Post, pk=pk)
+
+        # Use Like.objects.get_or_create to like the post
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if not created:
+            return Response({"detail": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create a notification for the post author
+        Notification.objects.create(
+            recipient=post.author,
+            actor=request.user,
+            verb="liked your post",
+            target=post
+        )
+
+        return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
+
+
+class UnlikePostView(APIView):
+    """
+    View for unliking a post.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        # Use generics.get_object_or_404 to fetch the post
+        post = get_object_or_404(Post, pk=pk)
+
+        # Fetch the like instance if it exists
+        like = Like.objects.filter(user=request.user, post=post).first()
+        if not like:
+            return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Delete the like instance
+        like.delete()
+
+        return Response({"detail": "Post unliked successfully."}, status=status.HTTP_200_OK)
